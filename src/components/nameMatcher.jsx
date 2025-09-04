@@ -7,7 +7,7 @@ export default function NameChecker() {
 
   const allNames = ["Abeeha", "Areeba", "Ayessha", "Aseema", "Ayesha"];
 
-  // Regex: starts with A, ends with a, length between 5–7
+ 
   const nameRegex = /^A\w{3,5}a$/i;
 
   const handleInputChange = (value) => {
@@ -19,28 +19,28 @@ export default function NameChecker() {
       return;
     }
 
-    // If exact match
+   
     const exactMatch = allNames.find(
       (n) => n.toLowerCase() === value.toLowerCase()
     );
     if (exactMatch) {
-      setResult(`✅ Exact match: ${exactMatch}`);
+      setResult(` Exact match: ${exactMatch}`);
       setSuggestions([]);
       return;
     }
 
-    // If regex matches → show possible names
+  
     if (nameRegex.test(value)) {
       const matchedNames = allNames.filter((n) => nameRegex.test(n));
       if (matchedNames.length > 0) {
-        setResult("🔎 Possible matches:");
+        setResult(" Possible matches:");
         setSuggestions(matchedNames);
         return;
       }
     }
 
-    // Otherwise not found
-    setResult("❌ Name not found");
+   
+    setResult(" Name not found");
     setSuggestions([]);
   };
 
@@ -67,7 +67,7 @@ export default function NameChecker() {
               onClick={() => {
                 setInputName(name);
                 setSuggestions([]);
-                setResult(`✅ Selected: ${name}`);
+                setResult(` Selected: ${name}`);
               }}
             >
               {name}

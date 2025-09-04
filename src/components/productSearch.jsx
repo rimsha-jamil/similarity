@@ -20,10 +20,10 @@ export default function ProductSearch() {
   // Filter products using RegEx
   const filteredProducts = products.filter((product) => {
     try {
-      const regex = new RegExp(query, "i"); // "i" = case-insensitive
+      const regex = new RegExp(query, "i"); 
       return regex.test(product);
     } catch (e) {
-      return false; // in case of invalid regex
+      return false;
     }
   });
 
