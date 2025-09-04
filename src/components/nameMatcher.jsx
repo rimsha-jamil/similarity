@@ -5,66 +5,42 @@ export default function NameChecker() {
   const [result, setResult] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
-  const actualName = "Ayesha";
-  const nameRegex = /^A\w{4,6}a$/i; // A + 4–6 chars + a
-
-  // Sample names
   const allNames = ["Abeeha", "Areeba", "Ayessha", "Aseema", "Ayesha"];
 
-  function getSimilarity(str1, str2) {
-    str1 = str1.toLowerCase();
-    str2 = str2.toLowerCase();
-
-    let matches = 0;
-    let minLen = Math.min(str1.length, str2.length);
-
-    for (let i = 0; i < minLen; i++) {
-      if (str1[i] === str2[i]) matches++;
-    }
-
-    return matches / Math.max(str1.length, str2.length);
-  }
-
-  function isOrderCorrect(input, target) {
-    let i = 0,
-      j = 0;
-    input = input.toLowerCase();
-    target = target.toLowerCase();
-
-    while (i < input.length && j < target.length) {
-      if (input[i] === target[j]) {
-        i++;
-      }
-      j++;
-    }
-    return i === input.length;
-  }
+  // Regex: starts with A, ends with a, length between 5–7
+  const nameRegex = /^A\w{3,5}a$/i;
 
   const handleInputChange = (value) => {
     setInputName(value);
 
-    // If exact match
-    if (value.toLowerCase() === actualName.toLowerCase()) {
-      setResult(`✅ Name found: ${actualName}`);
+    if (!value) {
+      setResult("");
       setSuggestions([]);
       return;
     }
 
-    // If regex matches → suggest possible names
-    if (nameRegex.test(value)) {
-      const matchedNames = allNames.filter((n) => nameRegex.test(n));
-      setSuggestions(matchedNames);
-      setResult("🔎 Possible matches (similar shape):");
+    // If exact match
+    const exactMatch = allNames.find(
+      (n) => n.toLowerCase() === value.toLowerCase()
+    );
+    if (exactMatch) {
+      setResult(`✅ Exact match: ${exactMatch}`);
+      setSuggestions([]);
       return;
     }
 
-    // Otherwise check similarity
-    const similarity = getSimilarity(value, actualName);
-    if (similarity >= 0.5 && isOrderCorrect(value, actualName)) {
-      setResult(" Name found: (50% similar with correct order)");
-    } else {
-      setResult("❌ Name not found");
+    // If regex matches → show possible names
+    if (nameRegex.test(value)) {
+      const matchedNames = allNames.filter((n) => nameRegex.test(n));
+      if (matchedNames.length > 0) {
+        setResult("🔎 Possible matches:");
+        setSuggestions(matchedNames);
+        return;
+      }
     }
+
+    // Otherwise not found
+    setResult("❌ Name not found");
     setSuggestions([]);
   };
 
@@ -82,7 +58,6 @@ export default function NameChecker() {
 
       {result && <p className="mt-4 text-center font-semibold">{result}</p>}
 
-      {/* Suggestions */}
       {suggestions.length > 0 && (
         <ul className="mt-3 space-y-2">
           {suggestions.map((name, i) => (
@@ -92,7 +67,7 @@ export default function NameChecker() {
               onClick={() => {
                 setInputName(name);
                 setSuggestions([]);
-                setResult(`✅ Name found: ${name}`);
+                setResult(`✅ Selected: ${name}`);
               }}
             >
               {name}
