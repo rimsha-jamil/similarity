@@ -17,30 +17,32 @@ export default function ProductSearch() {
     "Tablet",
   ];
 
-  // Filter products using includes
-  const filteredProducts = products.filter((product) =>
-    product.toLowerCase().includes(query.toLowerCase())
-  );
+  // Filter products using RegEx
+  const filteredProducts = products.filter((product) => {
+    try {
+      const regex = new RegExp(query, "i"); // "i" = case-insensitive
+      return regex.test(product);
+    } catch (e) {
+      return false; // in case of invalid regex
+    }
+  });
 
   return (
     <div className="p-8 max-w-lg mx-auto bg-gradient-to-r from-blue-100 to-blue-50 rounded-2xl shadow-lg">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-         Product Search
+        Product Search
       </h2>
 
       {/* Search Input */}
       <div className="relative mb-4">
         <input
           type="text"
-          placeholder="Search "
+          placeholder="Search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="border border-gray-300 pl-4 pr-10 py-3 w-full rounded-xl focus:ring-2 focus:ring-blue-400 outline-none shadow-sm"
         />
-       
       </div>
-
-      
 
       {/* Results */}
       <div className="bg-white rounded-xl shadow-md p-4">
@@ -58,7 +60,7 @@ export default function ProductSearch() {
             </ul>
           ) : (
             <p className="text-red-500 text-center font-medium">
-               No products found
+              No products found
             </p>
           )
         ) : (
@@ -68,30 +70,14 @@ export default function ProductSearch() {
               Popular Products
             </p>
             <ul className="grid grid-cols-2 gap-3">
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                iPhone
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                Samsung Galaxy
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                Shoes
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                Backpack
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                MacBook
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                Camera
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                Tablet
-              </li>
-              <li className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition">
-                Smart Watch
-              </li>
+              {products.map((product, index) => (
+                <li
+                  key={index}
+                  className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition"
+                >
+                  {product}
+                </li>
+              ))}
             </ul>
           </div>
         )}
